@@ -51,6 +51,15 @@
             android:configChanges="orientation"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name=".services.FCM_Notification_Service"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

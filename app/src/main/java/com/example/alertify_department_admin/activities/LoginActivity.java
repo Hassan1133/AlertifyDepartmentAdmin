@@ -1,30 +1,22 @@
 package com.example.alertify_department_admin.activities;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Context;;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.alertify_department_admin.R;
+import com.example.alertify_department_admin.databinding.ActivityLoginBinding;
+import com.example.alertify_department_admin.main_utils.LoadingDialog;
 import com.example.alertify_department_admin.model.DepAdminModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -38,34 +30,24 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Button loginBtn;
-
-    private TextInputEditText email, password;
-
     private FirebaseAuth firebaseAuth;
 
     private DatabaseReference depAdminRef;
 
     private DepAdminModel depAdmin;
 
-    private ProgressBar loadingProgressBar;
-
-    private Dialog loadingDialog;
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         init();
 
     }
 
     private void init() {
-        loginBtn = findViewById(R.id.login_btn);
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
-
 
         depAdmin = new DepAdminModel();
 
@@ -73,44 +55,16 @@ public class LoginActivity extends AppCompatActivity {
 
         depAdminRef = FirebaseDatabase.getInstance().getReference("AlertifyDepAdmin");
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isValid()) {
-                    createLoadingDialog();
-                    emailExistsOrNotForSignIn(email.getText().toString());
+                    LoadingDialog.showLoadingDialog(LoginActivity.this);
+                    emailExistsOrNotForSignIn(binding.email.getText().toString());
                 }
             }
         });
 
-    }
-
-    private void createLoadingDialog() {
-        loadingDialog = new Dialog(LoginActivity.this);
-        loadingDialog.setContentView(R.layout.loading_dialog);
-        loadingDialog.show();
-        loadingDialog.setCancelable(false);
-        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        TextView loadingTxt = loadingDialog.findViewById(R.id.loading);
-        loadingTxt.setText("Signing in....");
-
-        loadingProgressBar = loadingDialog.findViewById(R.id.profile_progressbar);
-
-        loadingProgressBar.setVisibility(View.VISIBLE);
-
-        loadingDialog.setOnKeyListener(new Dialog.OnKeyListener() {
-
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode,
-                                 KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                    dialog.dismiss();
-                    finish();
-                }
-                return true;
-            }
-        });
     }
 
     private void signIn(String emailText, String passwordText) {
@@ -126,11 +80,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    loadingDialog.dismiss();
-                    password.setError("wrong password");
+                    LoadingDialog.hideLoadingDialog();
+                    binding.password.setError("wrong password");
                     Toast.makeText(LoginActivity.this, "The Password is wrong", Toast.LENGTH_SHORT).show();
                 } else {
-                    signUp(email.getText().toString().trim(), password.getText().toString().trim());
+                    signUp(binding.email.getText().toString().trim(), binding.password.getText().toString().trim());
                 }
             }
         });
@@ -155,15 +109,15 @@ public class LoginActivity extends AppCompatActivity {
                             depAdmin.setDepAdminName(depAdminModel.getDepAdminName());
                             depAdmin.setDepAdminImageUrl(depAdminModel.getDepAdminImageUrl());
                             depAdmin.setDepAdminPoliceStation(depAdminModel.getDepAdminPoliceStation());
-                            signIn(email.getText().toString().trim(), password.getText().toString().trim());
+                            signIn(binding.email.getText().toString().trim(), binding.password.getText().toString().trim());
                             return;
                         } else if (count == snapshot.getChildrenCount()) {
-                            loadingDialog.dismiss();
+                            LoadingDialog.hideLoadingDialog();;
                             Toast.makeText(LoginActivity.this, "Account doesn't exist", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    loadingDialog.dismiss();
+                    LoadingDialog.hideLoadingDialog();;
                     Toast.makeText(LoginActivity.this, "Account doesn't exist", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -186,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                loadingDialog.dismiss();
+                LoadingDialog.hideLoadingDialog();
             }
         });
     }
@@ -212,12 +166,12 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isValid() {
         boolean valid = true;
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email.getText()).matches()) {
-            email.setError("Please enter valid email");
+        if (!Patterns.EMAIL_ADDRESS.matcher(binding.email.getText()).matches()) {
+            binding.email.setError("Please enter valid email");
             valid = false;
         }
-        if (password.getText().length() < 6) {
-            password.setError("Please enter valid password");
+        if (binding.password.getText().length() < 6) {
+            binding.password.setError("Please enter valid password");
             valid = false;
         }
 
@@ -247,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("depAdminPoliceStation", depAdmin.getDepAdminPoliceStation());
             editor.apply();
 
-            loadingDialog.dismiss();
+            LoadingDialog.hideLoadingDialog();;
             Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
             goToMainActivity();
         }
