@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.splash_screen;
+package com.example.alertify_department_admin.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.alertify_department_admin.R;
-import com.example.alertify_department_admin.authentication.LoginActivity;
-import com.example.alertify_department_admin.main_utils.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

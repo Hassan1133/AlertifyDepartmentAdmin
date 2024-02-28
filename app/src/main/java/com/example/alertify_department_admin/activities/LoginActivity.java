@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.authentication;
+package com.example.alertify_department_admin.activities;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.alertify_department_admin.R;
-import com.example.alertify_department_admin.main_utils.MainActivity;
 import com.example.alertify_department_admin.model.DepAdminModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

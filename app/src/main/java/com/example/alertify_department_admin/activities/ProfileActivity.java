@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.main_utils;
+package com.example.alertify_department_admin.activities;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;

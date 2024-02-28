@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.alertify_department_admin.R;
-import com.example.alertify_department_admin.users.Users_Details_Activity;
+import com.example.alertify_department_admin.activities.Users_Details_Activity;
 import com.example.alertify_department_admin.model.Users_Model;
 import com.google.android.material.imageview.ShapeableImageView;
 

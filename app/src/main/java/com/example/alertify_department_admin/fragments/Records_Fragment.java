@@ -1,18 +1,17 @@
-package com.example.alertify_department_admin.records;
+package com.example.alertify_department_admin.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.alertify_department_admin.R;
-import com.example.alertify_department_admin.records.crimes.CrimesActivity;
+import com.example.alertify_department_admin.activities.CrimesActivity;
 
 public class Records_Fragment extends Fragment implements View.OnClickListener {
 

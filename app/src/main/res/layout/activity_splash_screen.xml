@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.alertify_department_admin.splash_screen.SplashActivity"
+    tools:context="com.example.alertify_department_admin.activities.SplashActivity"
     android:background="@color/app_color"
     >
 

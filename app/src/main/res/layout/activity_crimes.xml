@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".records.crimes.CrimesActivity">
+    tools:context=".activities.CrimesActivity">
 
     <SearchView
         android:id="@+id/crimes_search_view"

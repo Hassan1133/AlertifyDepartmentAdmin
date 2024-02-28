@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.main_utils;
+package com.example.alertify_department_admin.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +18,9 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.alertify_department_admin.R;
 import com.example.alertify_department_admin.model.DepAdminModel;
-import com.example.alertify_department_admin.authentication.LoginActivity;
-import com.example.alertify_department_admin.complaints.Complaints_Fragment;
-import com.example.alertify_department_admin.records.Records_Fragment;
-import com.example.alertify_department_admin.users.Users_Fragment;
+import com.example.alertify_department_admin.fragments.Complaints_Fragment;
+import com.example.alertify_department_admin.fragments.Records_Fragment;
+import com.example.alertify_department_admin.fragments.Users_Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;

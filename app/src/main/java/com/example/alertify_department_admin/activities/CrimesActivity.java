@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.records.crimes;
+package com.example.alertify_department_admin.activities;
 
 import android.app.Dialog;
 import android.graphics.Color;

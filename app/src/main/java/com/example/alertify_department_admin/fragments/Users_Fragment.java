@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.users;
+package com.example.alertify_department_admin.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

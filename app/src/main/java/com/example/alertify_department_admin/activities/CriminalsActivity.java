@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.records.criminals;
+package com.example.alertify_department_admin.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
