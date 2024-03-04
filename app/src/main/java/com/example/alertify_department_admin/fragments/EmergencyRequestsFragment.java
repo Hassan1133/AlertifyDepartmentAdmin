@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +29,13 @@ public class EmergencyRequestsFragment extends Fragment {
     private EmergencyRequestsAdp adp;
     private DatabaseReference emergencyRef;
     private EmergencyRequestsFragmentBinding binding;
+    private Dialog loadingDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = EmergencyRequestsFragmentBinding.inflate(inflater, container, false);
         init();
-        fetchData();
         return binding.getRoot();
     }
 
@@ -45,11 +46,13 @@ public class EmergencyRequestsFragment extends Fragment {
         binding.emergencyRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         emergencyServiceList = new ArrayList<EmergencyServiceModel>();
+
+        loadingDialog = LoadingDialog.showLoadingDialog(getActivity());
+
+        fetchData();
     }
 
     private void fetchData() {
-
-        LoadingDialog.showLoadingDialog(getActivity());
 
         emergencyRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -61,14 +64,14 @@ public class EmergencyRequestsFragment extends Fragment {
                     emergencyServiceList.add(dataSnapshot.getValue(EmergencyServiceModel.class));
                 }
 
-                LoadingDialog.hideLoadingDialog();
-
                 setDataToRecycler(emergencyServiceList);
 
+                LoadingDialog.hideLoadingDialog(loadingDialog);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                LoadingDialog.hideLoadingDialog(loadingDialog);
                 Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

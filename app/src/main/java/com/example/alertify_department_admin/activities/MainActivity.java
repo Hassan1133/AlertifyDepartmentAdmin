@@ -57,11 +57,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.drawer_layout);
 
         init(); // initialization method for initializing variables
-        navigationSelection(); // selection method for navigation items
-        bottomNavigationSelection();
-        checkDepAdminBlockOrNot();
-        keepSharedPreferencesUpToDate();
-        loadFragment(new Complaints_Fragment());
     }
 
     private void init() {
@@ -75,12 +70,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         depAdminImage = headerView.findViewById(R.id.circle_img);
         depAdminName = headerView.findViewById(R.id.user_name);
         depAdminEmail = headerView.findViewById(R.id.user_email);
-
         bottom_navigation = findViewById(R.id.bottom_navigation);
+        depAdminRef = FirebaseDatabase.getInstance().getReference("AlertifyDepAdmin");
 
         setProfileData();
+        navigationSelection(); // selection method for navigation items
+        bottomNavigationSelection();
+        checkDepAdminBlockOrNot();
+        keepSharedPreferencesUpToDate();
+        loadFragment(new Complaints_Fragment());
+        loadFragmentOnNotification();
+    }
 
-        depAdminRef = FirebaseDatabase.getInstance().getReference("AlertifyDepAdmin");
+    private void loadFragmentOnNotification() {
+        if (getIntent().hasExtra("notificationFragment")) {
+            String fragmentName = getIntent().getStringExtra("notificationFragment");
+            if (fragmentName.equals("EmergencyRequestsFragment")) {
+                loadFragment(new EmergencyRequestsFragment());
+                bottom_navigation.setSelectedItemId(R.id.emergency);
+            }
+        }
     }
 
     private void setProfileData() {
@@ -183,8 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void signOut()
-    {
+    private void signOut() {
         FirebaseAuth.getInstance().signOut();
 
         SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
@@ -200,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
         finish();
     }
+
     private void checkDepAdminBlockOrNot() {
 
         depAdminRef.child(depAdminId).child("depAdminStatus").addValueEventListener(new ValueEventListener() {

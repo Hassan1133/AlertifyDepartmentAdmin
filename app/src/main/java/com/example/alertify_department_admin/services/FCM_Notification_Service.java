@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.alertify_department_admin.R;
+import com.example.alertify_department_admin.activities.MainActivity;
 import com.example.alertify_department_admin.fragments.EmergencyRequestsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -32,7 +33,8 @@ public class FCM_Notification_Service extends FirebaseMessagingService {
 
     private void sendNotification(String title, String messageBody) {
 
-        Intent intent = new Intent(this, EmergencyRequestsFragment.class);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("notificationFragment", "EmergencyRequestsFragment");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
@@ -49,7 +51,7 @@ public class FCM_Notification_Service extends FirebaseMessagingService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "Your_Channel_Name", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(channelId, "Emergency Requests", NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
 

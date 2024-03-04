@@ -1,5 +1,6 @@
 package com.example.alertify_department_admin.activities;
 
+import android.app.Dialog;
 import android.content.Context;;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
 
+    private Dialog loadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isValid()) {
-                    LoadingDialog.showLoadingDialog(LoginActivity.this);
+                    loadingDialog = LoadingDialog.showLoadingDialog(LoginActivity.this);
                     emailExistsOrNotForSignIn(binding.email.getText().toString());
                 }
             }
@@ -81,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    LoadingDialog.hideLoadingDialog();
+                    LoadingDialog.hideLoadingDialog(loadingDialog);
                     binding.password.setError("wrong password");
                     Toast.makeText(LoginActivity.this, "The Password is wrong", Toast.LENGTH_SHORT).show();
                 } else {
@@ -113,12 +116,12 @@ public class LoginActivity extends AppCompatActivity {
                             signIn(binding.email.getText().toString().trim(), binding.password.getText().toString().trim());
                             return;
                         } else if (count == snapshot.getChildrenCount()) {
-                            LoadingDialog.hideLoadingDialog();
+                            LoadingDialog.hideLoadingDialog(loadingDialog);
                             Toast.makeText(LoginActivity.this, "Account doesn't exist", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    LoadingDialog.hideLoadingDialog();
+                    LoadingDialog.hideLoadingDialog(loadingDialog);
                     Toast.makeText(LoginActivity.this, "Account doesn't exist", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -141,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                LoadingDialog.hideLoadingDialog();
+                LoadingDialog.hideLoadingDialog(loadingDialog);
             }
         });
     }
@@ -234,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("depAdminPoliceStation", depAdmin.getDepAdminPoliceStation());
             editor.apply();
 
-            LoadingDialog.hideLoadingDialog();
+            LoadingDialog.hideLoadingDialog(loadingDialog);
             Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
             goToMainActivity();
         }
