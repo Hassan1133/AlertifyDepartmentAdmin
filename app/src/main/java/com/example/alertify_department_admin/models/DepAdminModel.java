@@ -1,13 +1,15 @@
-package com.example.alertify_department_admin.model;
+package com.example.alertify_department_admin.models;
 
 public class DepAdminModel {
     private String depAdminId;
-    private String uId;
+    private String depAdminUid;
     private String depAdminName;
     private String depAdminPoliceStation;
     private String depAdminEmail;
     private String depAdminStatus;
     private String depAdminImageUrl;
+
+    private String depAdminFCMToken;
 
     public String getDepAdminId() {
         return depAdminId;
@@ -17,12 +19,12 @@ public class DepAdminModel {
         this.depAdminId = depAdminId;
     }
 
-    public String getuId() {
-        return uId;
+    public String getDepAdminUid() {
+        return depAdminUid;
     }
 
-    public void setuId(String uId) {
-        this.uId = uId;
+    public void setDepAdminUid(String depAdminUid) {
+        this.depAdminUid = depAdminUid;
     }
 
     public String getDepAdminName() {
@@ -63,5 +65,13 @@ public class DepAdminModel {
 
     public void setDepAdminImageUrl(String depAdminImageUrl) {
         this.depAdminImageUrl = depAdminImageUrl;
+    }
+
+    public String getDepAdminFCMToken() {
+        return depAdminFCMToken;
+    }
+
+    public void setDepAdminFCMToken(String depAdminFCMToken) {
+        this.depAdminFCMToken = depAdminFCMToken;
     }
 }

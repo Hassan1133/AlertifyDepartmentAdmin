@@ -13,25 +13,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AlertifyDepartmentAdmin"
         tools:targetApi="31">
+
         <activity
-            android:name="com.example.alertify_department_admin.activities.CriminalsActivity"
-            android:exported="false" />
+            android:name=".activities.CriminalsActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.alertify_department_admin.activities.LawsActivity"
-            android:exported="false" />
+            android:name=".activities.LawsActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.alertify_department_admin.activities.CrimesActivity"
-            android:exported="false" />
+            android:name=".activities.CrimesActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Users_Details_Activity"
-            android:exported="false" />
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ProfileActivity"
             android:configChanges="orientation"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.alertify_department_admin.activities.SplashActivity"
+            android:name=".activities.SplashActivity"
             android:configChanges="orientation"
             android:exported="true"
             android:screenOrientation="portrait">
@@ -42,7 +51,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.alertify_department_admin.activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:configChanges="orientation"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -59,7 +68,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

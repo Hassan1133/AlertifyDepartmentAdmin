@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Alertify</string>
+    <string name="search">Search...</string>
 </resources>

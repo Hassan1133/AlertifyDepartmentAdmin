@@ -17,13 +17,15 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.alertify_department_admin.R;
-import com.example.alertify_department_admin.model.DepAdminModel;
+import com.example.alertify_department_admin.fragments.EmergencyRequestsFragment;
+import com.example.alertify_department_admin.models.DepAdminModel;
 import com.example.alertify_department_admin.fragments.Complaints_Fragment;
 import com.example.alertify_department_admin.fragments.Records_Fragment;
 import com.example.alertify_department_admin.fragments.Users_Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -143,6 +145,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         loadFragment(new Records_Fragment());
 //                        }
                         return true;
+                    case R.id.emergency:
+                        loadFragment(new EmergencyRequestsFragment());
+                        return true;
                 }
                 return false;
             }
@@ -157,24 +162,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
 
                     case R.id.logout:
-
-                        SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
-                        SharedPreferences.Editor loginEditor = pref.edit();
-                        loginEditor.putBoolean("flag", false);
-                        loginEditor.apply();
-
-                        SharedPreferences depAdminData = getSharedPreferences("depAdminProfileData", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor profileEditor = depAdminData.edit();
-                        profileEditor.clear();
-
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
+                        signOut();
                         break;
 
                     case R.id.profile:
-                        intent = new Intent(MainActivity.this, ProfileActivity.class);
-                        startActivity(intent);
+                        Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(profileIntent);
                         drawer.closeDrawer(GravityCompat.START);
                         break;
 
@@ -190,6 +183,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void signOut()
+    {
+        FirebaseAuth.getInstance().signOut();
+
+        SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
+        SharedPreferences.Editor loginEditor = pref.edit();
+        loginEditor.putBoolean("flag", false);
+        loginEditor.apply();
+
+        SharedPreferences depAdminData = getSharedPreferences("depAdminProfileData", Context.MODE_PRIVATE);
+        SharedPreferences.Editor profileEditor = depAdminData.edit();
+        profileEditor.clear();
+
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
     private void checkDepAdminBlockOrNot() {
 
         depAdminRef.child(depAdminId).child("depAdminStatus").addValueEventListener(new ValueEventListener() {

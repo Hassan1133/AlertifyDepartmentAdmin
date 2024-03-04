@@ -1,4 +1,4 @@
-package com.example.alertify_department_admin.model;
+package com.example.alertify_department_admin.models;
 
 public class CrimesModel {
     private String crimeType;

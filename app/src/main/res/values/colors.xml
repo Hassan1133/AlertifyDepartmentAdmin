@@ -13,4 +13,5 @@
     <color name="bottom_active_color">#0B426F</color>
     <color name="recycler_data_clr">#888888</color>
     <color name="hint_color">#7A7A7A</color>
+    <color name="lighter_grey">#EDEDED</color>
 </resources>

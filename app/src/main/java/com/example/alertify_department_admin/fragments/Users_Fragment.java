@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alertify_department_admin.R;
 import com.example.alertify_department_admin.adapters.UsersAdp;
-import com.example.alertify_department_admin.model.Users_Model;
+import com.example.alertify_department_admin.models.Users_Model;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

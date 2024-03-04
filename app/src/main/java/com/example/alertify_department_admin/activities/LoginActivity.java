@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.alertify_department_admin.databinding.ActivityLoginBinding;
 import com.example.alertify_department_admin.main_utils.LoadingDialog;
-import com.example.alertify_department_admin.model.DepAdminModel;
+import com.example.alertify_department_admin.models.DepAdminModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -73,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    getProfileData();
+                    getFCMToken();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -112,12 +113,12 @@ public class LoginActivity extends AppCompatActivity {
                             signIn(binding.email.getText().toString().trim(), binding.password.getText().toString().trim());
                             return;
                         } else if (count == snapshot.getChildrenCount()) {
-                            LoadingDialog.hideLoadingDialog();;
+                            LoadingDialog.hideLoadingDialog();
                             Toast.makeText(LoginActivity.this, "Account doesn't exist", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    LoadingDialog.hideLoadingDialog();;
+                    LoadingDialog.hideLoadingDialog();
                     Toast.makeText(LoginActivity.this, "Account doesn't exist", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -134,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    setUidToDb(firebaseAuth.getUid(), emailText, passwordText);
+                    setUidToDb(task.getResult().getUser().getUid(), emailText, passwordText);
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -147,17 +148,50 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setUidToDb(String uId, String emailText, String passwordText) {
 
-        depAdmin.setuId(uId);
+        depAdmin.setDepAdminUid(uId);
 
         HashMap<String, Object> map = new HashMap<>();
 
-        map.put("uid", depAdmin.getuId());
+        map.put("depAdminUid", depAdmin.getDepAdminUid());
 
         depAdminRef.child(depAdmin.getDepAdminId()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     signIn(emailText, passwordText);
+                }
+            }
+        });
+    }
+
+    private void getFCMToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    setFCMTokenToDb(task.getResult());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setFCMTokenToDb(String token) {
+        depAdmin.setDepAdminFCMToken(token);
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("depAdminFCMToken", depAdmin.getDepAdminFCMToken());
+
+        depAdminRef.child(depAdmin.getDepAdminId()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    getProfileData();
                 }
             }
         });
@@ -192,8 +226,7 @@ public class LoginActivity extends AppCompatActivity {
     private void getProfileData() {
         SharedPreferences depAdminData = getSharedPreferences("depAdminProfileData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = depAdminData.edit();
-        if(depAdmin != null)
-        {
+        if (depAdmin != null) {
             editor.putString("depAdminId", depAdmin.getDepAdminId());
             editor.putString("depAdminName", depAdmin.getDepAdminName());
             editor.putString("depAdminEmail", depAdmin.getDepAdminEmail());
@@ -201,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("depAdminPoliceStation", depAdmin.getDepAdminPoliceStation());
             editor.apply();
 
-            LoadingDialog.hideLoadingDialog();;
+            LoadingDialog.hideLoadingDialog();
             Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
             goToMainActivity();
         }
