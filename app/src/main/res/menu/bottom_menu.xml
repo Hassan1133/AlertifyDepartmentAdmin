@@ -4,23 +4,18 @@
     <item
         android:id="@+id/complaints"
         android:icon="@drawable/complaint"
-        android:title="Complaints" />
-
-    <item
-        android:id="@+id/users"
-        android:icon="@drawable/baseline_supervised_user_circle_24"
-        android:title="Users" />
-
-    <item
-        android:id="@+id/records"
-        android:title="Records"
-        android:icon="@drawable/record"
-        />
+        android:title="@string/complaints" />
 
     <item
         android:id="@+id/emergency"
-        android:title="Emergency"
+        android:title="@string/emergency"
         android:icon="@drawable/emergency"
+        />
+
+    <item
+        android:id="@+id/records"
+        android:title="@string/records"
+        android:icon="@drawable/record"
         />
 
 </menu>

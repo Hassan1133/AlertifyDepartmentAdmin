@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class EmergencyRequestsFragment extends Fragment {
@@ -32,7 +34,7 @@ public class EmergencyRequestsFragment extends Fragment {
     private Dialog loadingDialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = EmergencyRequestsFragmentBinding.inflate(inflater, container, false);
         init();
@@ -64,6 +66,8 @@ public class EmergencyRequestsFragment extends Fragment {
                     emergencyServiceList.add(dataSnapshot.getValue(EmergencyServiceModel.class));
                 }
 
+                // Sort the list
+                Collections.reverse(emergencyServiceList);
                 setDataToRecycler(emergencyServiceList);
 
                 LoadingDialog.hideLoadingDialog(loadingDialog);

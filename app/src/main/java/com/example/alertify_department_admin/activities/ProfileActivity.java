@@ -1,21 +1,19 @@
 package com.example.alertify_department_admin.activities;
 
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.alertify_department_admin.R;
+import com.example.alertify_department_admin.databinding.ActivityProfileBinding;
+import com.example.alertify_department_admin.main_utils.AppSharedPreferences;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -23,12 +21,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView depAdminName, depAdminEmail, depAdminPoliceStation;
-    private CircleImageView depAdminImage;
+    private ActivityProfileBinding binding;
+
+    private AppSharedPreferences appSharedPreferences;
 
     private Dialog editPasswordDialog;
 
@@ -38,25 +35,23 @@ public class ProfileActivity extends AppCompatActivity {
 
     private FirebaseUser firebaseUser;
 
-    private ImageView passwordEditBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        binding = ActivityProfileBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         init();
     }
 
     private void init() {
-        depAdminName = findViewById(R.id.dep_admin_name);
-        depAdminEmail = findViewById(R.id.dep_admin_email);
-        depAdminPoliceStation = findViewById(R.id.dep_admin_police_station);
-        depAdminImage = findViewById(R.id.dep_admin_image);
+
+        appSharedPreferences = new AppSharedPreferences(ProfileActivity.this);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        passwordEditBtn = findViewById(R.id.password_edit_btn);
-        passwordEditBtn.setOnClickListener(new View.OnClickListener() {
+        binding.passwordEditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createPasswordDialog();
@@ -67,14 +62,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        SharedPreferences depAdminData = getSharedPreferences("depAdminProfileData", MODE_PRIVATE);
-        depAdminName.setText(depAdminData.getString("depAdminName", ""));
+        binding.depAdminName.setText(appSharedPreferences.getString("depAdminName"));
 
-        depAdminEmail.setText(depAdminData.getString("depAdminEmail", ""));
+        binding.depAdminEmail.setText(appSharedPreferences.getString("depAdminEmail"));
 
-        depAdminPoliceStation.setText(depAdminData.getString("depAdminPoliceStation", ""));
-
-        Glide.with(getApplicationContext()).load(depAdminData.getString("depAdminImageUrl", "")).into(depAdminImage);
+        binding.depAdminPoliceStation.setText(appSharedPreferences.getString("depAdminPoliceStation"));
     }
 
     private void createPasswordDialog() {

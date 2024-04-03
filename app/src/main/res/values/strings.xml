@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">Alertify</string>
     <string name="search">Search...</string>
+    <string name="complaints">Complaints</string>
+    <string name="records">Records</string>
+    <string name="emergency">Emergency</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="police_station">Police Station</string>
+    <string name="password">Password</string>
+    <string name="change_password">change password</string>
+    <string name="alertify">ALERTIFY</string>
+    <string name="crimes">Crimes</string>
+    <string name="laws">Laws</string>
+    <string name="criminals">Criminals</string>
+    <string name="criminal_cnic">Criminal CNIC without dashes</string>
+    <string name="criminal_name">Criminal name</string>
+    <string name="add_criminal">Add Criminal</string>
+    <string name="crime_type">Crime Type</string>
+    <string name="crime">Crime</string>
 </resources>

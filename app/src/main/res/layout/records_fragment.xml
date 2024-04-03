@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:text="Crimes"
+                    android:text="@string/crimes"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold" />
@@ -53,7 +53,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/Laws"
+            android:id="@+id/laws"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/crimes"
@@ -78,7 +78,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:elevation="4dp"
-                    android:text="Laws"
+                    android:text="@string/laws"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold" />
@@ -100,7 +100,7 @@
             android:id="@+id/criminals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/Laws"
+            android:layout_below="@+id/laws"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
@@ -122,7 +122,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:elevation="4dp"
-                    android:text="Criminals"
+                    android:text="@string/criminals"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:textStyle="bold" />

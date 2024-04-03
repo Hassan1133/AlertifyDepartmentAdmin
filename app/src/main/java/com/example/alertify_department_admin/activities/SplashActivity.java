@@ -2,13 +2,16 @@ package com.example.alertify_department_admin.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.alertify_department_admin.R;
+import com.example.alertify_department_admin.main_utils.AppSharedPreferences;
 
+@SuppressLint("CustomSplashScreen")
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -22,8 +25,8 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
-                boolean check = pref.getBoolean("flag", false);
+                AppSharedPreferences appSharedPreferences = new AppSharedPreferences(SplashActivity.this);
+                boolean check = appSharedPreferences.getBoolean("depAdminLogin");
                 Intent intent;
 
                 if (check) {

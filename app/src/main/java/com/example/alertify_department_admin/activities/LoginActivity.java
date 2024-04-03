@@ -1,7 +1,9 @@
 package com.example.alertify_department_admin.activities;
 
+import static com.example.alertify_department_admin.constants.Constants.ALERTIFY_DEP_ADMIN_REF;
+
 import android.app.Dialog;
-import android.content.Context;;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.alertify_department_admin.databinding.ActivityLoginBinding;
+import com.example.alertify_department_admin.main_utils.AppSharedPreferences;
 import com.example.alertify_department_admin.main_utils.LoadingDialog;
 import com.example.alertify_department_admin.models.DepAdminModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private Dialog loadingDialog;
 
+    private AppSharedPreferences appSharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +58,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void init() {
 
+        appSharedPreferences = new AppSharedPreferences(LoginActivity.this);
+
         depAdmin = new DepAdminModel();
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        depAdminRef = FirebaseDatabase.getInstance().getReference("AlertifyDepAdmin");
+        depAdminRef = FirebaseDatabase.getInstance().getReference(ALERTIFY_DEP_ADMIN_REF);
 
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +118,6 @@ public class LoginActivity extends AppCompatActivity {
                             depAdmin.setDepAdminId(depAdminModel.getDepAdminId());
                             depAdmin.setDepAdminEmail(depAdminModel.getDepAdminEmail());
                             depAdmin.setDepAdminName(depAdminModel.getDepAdminName());
-                            depAdmin.setDepAdminImageUrl(depAdminModel.getDepAdminImageUrl());
                             depAdmin.setDepAdminPoliceStation(depAdminModel.getDepAdminPoliceStation());
                             signIn(binding.email.getText().toString().trim(), binding.password.getText().toString().trim());
                             return;
@@ -128,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -216,10 +222,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity() {
-        SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean("flag", true);
-        editor.apply();
+       appSharedPreferences.put("depAdminLogin", true);
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
@@ -227,15 +230,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        SharedPreferences depAdminData = getSharedPreferences("depAdminProfileData", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = depAdminData.edit();
         if (depAdmin != null) {
-            editor.putString("depAdminId", depAdmin.getDepAdminId());
-            editor.putString("depAdminName", depAdmin.getDepAdminName());
-            editor.putString("depAdminEmail", depAdmin.getDepAdminEmail());
-            editor.putString("depAdminImageUrl", depAdmin.getDepAdminImageUrl());
-            editor.putString("depAdminPoliceStation", depAdmin.getDepAdminPoliceStation());
-            editor.apply();
+            appSharedPreferences.put("depAdminId", depAdmin.getDepAdminId());
+            appSharedPreferences.put("depAdminName", depAdmin.getDepAdminName());
+            appSharedPreferences.put("depAdminEmail", depAdmin.getDepAdminEmail());
+            appSharedPreferences.put("depAdminPoliceStation", depAdmin.getDepAdminPoliceStation());
 
             LoadingDialog.hideLoadingDialog(loadingDialog);
             Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
