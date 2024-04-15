@@ -1,6 +1,5 @@
 package com.example.alertify_department_admin.activities;
 
-import static com.example.alertify_department_admin.constants.Constants.ALERTIFY_CRIMES_REF;
 import static com.example.alertify_department_admin.constants.Constants.ALERTIFY_CRIMINALS_REF;
 
 import android.app.Dialog;
@@ -12,10 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.alertify_department_admin.R;
+import com.example.alertify_department_admin.adapters.CrimesAdp;
+import com.example.alertify_department_admin.adapters.CriminalsAdp;
 import com.example.alertify_department_admin.databinding.ActivityCriminalsBinding;
 import com.example.alertify_department_admin.models.CrimesModel;
 import com.example.alertify_department_admin.models.CriminalCrimesModel;
@@ -31,10 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class CriminalsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -48,6 +46,8 @@ public class CriminalsActivity extends AppCompatActivity implements View.OnClick
 
     private DatabaseReference criminalsRef;
 
+    private List<CriminalsModel> criminals;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,59 @@ public class CriminalsActivity extends AppCompatActivity implements View.OnClick
     private void init() {
         binding.addBtn.setOnClickListener(this);
         criminalsRef = FirebaseDatabase.getInstance().getReference(ALERTIFY_CRIMINALS_REF);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(CriminalsActivity.this));
+        criminals = new ArrayList<CriminalsModel>();
+
+        binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                search(newText);
+                return true;
+            }
+        });
+
+        fetchCriminalData();
+    }
+
+    private void search(String newText) {
+        ArrayList<CriminalsModel> searchList = new ArrayList<>();
+        for (CriminalsModel i : criminals) {
+            if (i.getCriminalName().toLowerCase().contains(newText.toLowerCase()) || i.getCriminalCnic().contains(newText)) {
+                searchList.add(i);
+            }
+        }
+        setDataToRecycler(searchList);
+    }
+
+    private void fetchCriminalData() {
+        binding.progressbar.setVisibility(View.VISIBLE);
+
+        criminalsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                criminals.clear();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    criminals.add(dataSnapshot.getValue(CriminalsModel.class));
+                }
+
+                binding.progressbar.setVisibility(View.GONE);
+
+                setDataToRecycler(criminals);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(CriminalsActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -94,12 +147,9 @@ public class CriminalsActivity extends AppCompatActivity implements View.OnClick
                 if (isValid()) {
                     criminalDialogProgressbar.setVisibility(View.VISIBLE);
 
-                    List<CriminalCrimesModel> criminalCrimesList = new ArrayList<>();
-
                     CriminalsModel criminalsModel = new CriminalsModel();
                     criminalsModel.setCriminalCnic(criminalCnic.getText().toString());
                     criminalsModel.setCriminalName(criminalName.getText().toString());
-                    criminalsModel.setCriminalCrimesList(criminalCrimesList);
                     checkCriminalAlreadyExistOrNot(criminalsModel);
 
                 }
@@ -109,35 +159,17 @@ public class CriminalsActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void checkCriminalAlreadyExistOrNot(CriminalsModel criminalsModel) {
-        criminalsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            int count = 0;
-            boolean check = false;
-
+        criminalsRef.child(criminalsModel.getCriminalCnic()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot criminalSnapshot : snapshot.getChildren()) {
-
-                        CriminalsModel criminal = criminalSnapshot.getValue(CriminalsModel.class);
-
-                        count++;
-
-                        assert criminal != null;
-                        if (criminal.getCriminalCnic().equalsIgnoreCase(criminalsModel.getCriminalCnic())) {
-                            criminalDialogProgressbar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(CriminalsActivity.this, "Criminal already exists. Please enter a different one", Toast.LENGTH_SHORT).show();
-                            criminalCnic.setError("Criminal exists. Please enter a different one");
-                            check = true;
-                            return;
-                        } else if (count == snapshot.getChildrenCount()) {
-                            if (!check) {
-                                addToDb(criminalsModel);
-                            }
-                        }
-                    }
-                } else {
+                if(snapshot.exists())
+                {
+                    criminalDialogProgressbar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(CriminalsActivity.this, "Criminal already exists. Please enter a different one", Toast.LENGTH_SHORT).show();
+                    criminalCnic.setError("Criminal exists. Please enter a different one");
+                }
+                else {
                     addToDb(criminalsModel);
-
                 }
             }
 
@@ -177,9 +209,14 @@ public class CriminalsActivity extends AppCompatActivity implements View.OnClick
             valid = false;
         }
         if (criminalName.getText().length() < 3) {
-            criminalCnic.setError("Please enter valid name");
+            criminalName.setError("Please enter valid name");
             valid = false;
         }
         return valid;
+    }
+
+    private void setDataToRecycler(List<CriminalsModel> criminalsList) {
+        CriminalsAdp adp = new CriminalsAdp(CriminalsActivity.this, criminalsList);
+        binding.recyclerView.setAdapter(adp);
     }
 }

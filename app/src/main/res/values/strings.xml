@@ -6,7 +6,7 @@
     <string name="emergency">Emergency</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
-    <string name="police_station">Police Station</string>
+    <string name="police_station">Police Station :</string>
     <string name="password">Password</string>
     <string name="change_password">change password</string>
     <string name="alertify">ALERTIFY</string>
@@ -18,4 +18,12 @@
     <string name="add_criminal">Add Criminal</string>
     <string name="crime_type">Crime Type</string>
     <string name="crime">Crime</string>
+    <string name="cnic">CNIC</string>
+    <string name="fir">FIR</string>
+    <string name="district">District :</string>
+    <string name="enter_district_e_g_faisalabad">enter district e.g Faisalabad</string>
+    <string name="enter_police_station_name">enter police station name</string>
+    <string name="enter_number_of_fir">enter number of FIR</string>
+    <string name="add_fir_details">Add FIR Details</string>
+    <string name="no_of_fir">No of FIR :</string>
 </resources>

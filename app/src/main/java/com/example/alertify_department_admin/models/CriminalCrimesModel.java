@@ -1,16 +1,25 @@
 package com.example.alertify_department_admin.models;
 
 public class CriminalCrimesModel {
-    private String FIR;
+    private String FIRNumber;
     private String PoliceStation;
     private String District;
+    private String id;
 
-    public String getFIR() {
-        return FIR;
+    public String getId() {
+        return id;
     }
 
-    public void setFIR(String FIR) {
-        this.FIR = FIR;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFIRNumber() {
+        return FIRNumber;
+    }
+
+    public void setFIRNumber(String FIRNumber) {
+        this.FIRNumber = FIRNumber;
     }
 
     public String getPoliceStation() {

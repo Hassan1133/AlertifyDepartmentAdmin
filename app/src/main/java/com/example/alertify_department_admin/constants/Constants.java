@@ -12,4 +12,5 @@ public interface Constants {
     String ALERTIFY_CRIMES_REF = "AlertifyCrimes";
     String ALERTIFY_LAWS_REF = "AlertifyLaws";
     String ALERTIFY_CRIMINALS_REF = "AlertifyCriminals";
+    String FIR_REF = "FIR";
 }

@@ -1,11 +1,11 @@
 package com.example.alertify_department_admin.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CriminalsModel {
+public class CriminalsModel implements Serializable {
     private String criminalCnic;
     private String criminalName;
-    private List<CriminalCrimesModel> criminalCrimesList;
 
     public String getCriminalCnic() {
         return criminalCnic;
@@ -21,13 +21,5 @@ public class CriminalsModel {
 
     public void setCriminalName(String criminalName) {
         this.criminalName = criminalName;
-    }
-
-    public List<CriminalCrimesModel> getCriminalCrimesList() {
-        return criminalCrimesList;
-    }
-
-    public void setCriminalCrimesList(List<CriminalCrimesModel> criminalCrimesList) {
-        this.criminalCrimesList = criminalCrimesList;
     }
 }
