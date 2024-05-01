@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void loadFragmentOnNotificationOrOnCreate() {
         if (getIntent().hasExtra("notificationFragment")) {
-            Toast.makeText(this, "out", Toast.LENGTH_SHORT).show();
             String fragmentName = getIntent().getStringExtra("notificationFragment");
             assert fragmentName != null;
             if (fragmentName.equals("EmergencyRequestsFragment")) {

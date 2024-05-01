@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -34,6 +35,9 @@ public class FCM_Notification_Service extends FirebaseMessagingService {
 
     private void sendNotification(String title, String messageBody, String notificationType) {
 
+        Log.d("TAGReceiver", "sendNotification: "+notificationType);
+        Log.d("TAGReceiver", "message: "+messageBody);
+
         Intent intent = new Intent(this, MainActivity.class);
         if (messageBody.contains("needs help right now.")) {
             intent.putExtra("notificationFragment", "EmergencyRequestsFragment");
@@ -44,11 +48,12 @@ public class FCM_Notification_Service extends FirebaseMessagingService {
         String channelId = "Your_Channel_ID";
         NotificationCompat.Builder notificationBuilder;
 
-//        if (notificationType.equals("emergency")) {
+        if (notificationType.equals("emergency")) {
             notificationBuilder = new NotificationCompat.Builder(this, channelId).setSmallIcon(R.drawable.emergency).setContentTitle(title).setContentText(messageBody).setDefaults(Notification.DEFAULT_SOUND).setAutoCancel(true).setContentIntent(pendingIntent);
-//        } else {
-//            notificationBuilder = new NotificationCompat.Builder(this, channelId).setSmallIcon(R.drawable.complaint).setContentTitle(title).setContentText(messageBody).setDefaults(Notification.DEFAULT_SOUND).setAutoCancel(true).setContentIntent(pendingIntent);
-//        }
+        }
+        else{
+            notificationBuilder = new NotificationCompat.Builder(this, channelId).setSmallIcon(R.drawable.complaint).setContentTitle(title).setContentText(messageBody).setDefaults(Notification.DEFAULT_SOUND).setAutoCancel(true).setContentIntent(pendingIntent);
+        }
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
