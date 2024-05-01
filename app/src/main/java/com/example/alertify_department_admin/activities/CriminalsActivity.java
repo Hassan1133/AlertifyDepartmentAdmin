@@ -40,9 +40,8 @@ public class CriminalsActivity extends AppCompatActivity implements View.OnClick
 
     private Dialog criminalsDialog;
 
-    private ProgressBar criminalDialogProgressbar;
-
     private TextInputEditText criminalCnic, criminalName;
+    private ProgressBar criminalDialogProgressbar;
 
     private DatabaseReference criminalsRef;
 

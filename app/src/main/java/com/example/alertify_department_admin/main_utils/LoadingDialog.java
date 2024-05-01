@@ -9,10 +9,8 @@ import com.example.alertify_department_admin.R;
 
 public class LoadingDialog {
 
-    private static Dialog dialog;
-
     public static Dialog showLoadingDialog(Context context) {
-        dialog = new Dialog(context);
+        Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.loading_dialog);
         dialog.setCancelable(false); // To prevent the dialog from being dismissed by touching outside
 

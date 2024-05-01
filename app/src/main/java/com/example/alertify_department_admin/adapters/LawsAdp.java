@@ -1,9 +1,10 @@
 package com.example.alertify_department_admin.adapters;
 
-import static com.example.alertify_department_admin.constants.Constants.ALERTIFY_CRIMES_REF;
+import static com.example.alertify_department_admin.constants.Constants.ALERTIFY_LAWS_REF;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alertify_department_admin.R;
-import com.example.alertify_department_admin.models.CrimesModel;
+import com.example.alertify_department_admin.activities.LawsDetailsActivity;
+import com.example.alertify_department_admin.models.LawsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -24,39 +26,37 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-public class CrimesAdp extends RecyclerView.Adapter<CrimesAdp.Holder> {
+public class LawsAdp extends RecyclerView.Adapter<LawsAdp.Holder> {
 
     private final Context context;
 
-    private final List<CrimesModel> crimesList;
+    private final List<LawsModel> crimesList;
 
-    private final DatabaseReference crimesRef;
+    private final DatabaseReference lawsRef;
 
-    public CrimesAdp(Context context, List<CrimesModel> crimes) {
+    public LawsAdp(Context context, List<LawsModel> crimes) {
         this.context = context;
         crimesList = crimes;
-        crimesRef = FirebaseDatabase.getInstance().getReference(ALERTIFY_CRIMES_REF);
+        lawsRef = FirebaseDatabase.getInstance().getReference(ALERTIFY_LAWS_REF);
 
     }
 
     @NonNull
     @Override
-    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LawsAdp.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.crimes_recycler_design, parent, false);
+        View view = inflater.inflate(R.layout.laws_recyler_design, parent, false);
 
-        return new Holder(view);
+        return new LawsAdp.Holder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
+    public void onBindViewHolder(@NonNull LawsAdp.Holder holder, int position) {
 
-        CrimesModel crimesModel = crimesList.get(position);
+        LawsModel lawsModel = crimesList.get(position);
 
-
-        holder.crime.setText(crimesModel.getCrimeType());
-        holder.definition.setText(crimesModel.getDefinition());
+        holder.crime.setText(lawsModel.getCrimeType());
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class CrimesAdp extends RecyclerView.Adapter<CrimesAdp.Holder> {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deleteCrime(crimesModel); // Perform logout
+                                deleteCrimeLaw(lawsModel); // Perform logout
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -83,14 +83,22 @@ public class CrimesAdp extends RecyclerView.Adapter<CrimesAdp.Holder> {
                 return false;
             }
         });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, LawsDetailsActivity.class);
+                intent.putExtra("lawsModel", lawsModel);
+                context.startActivity(intent);
+            }
+        });
     }
 
-    private void deleteCrime(CrimesModel crimesModel)
-    {
-        crimesRef.child(crimesModel.getCrimeType()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+    private void deleteCrimeLaw(LawsModel lawsModel) {
+        lawsRef.child(lawsModel.getCrimeType()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(context, "Crime deleted successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Law Crime deleted successfully", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -107,11 +115,11 @@ public class CrimesAdp extends RecyclerView.Adapter<CrimesAdp.Holder> {
 
     class Holder extends RecyclerView.ViewHolder {
 
-        private TextView crime, definition;
+        private TextView crime;
+
         public Holder(@NonNull View itemView) {
             super(itemView);
             crime = itemView.findViewById(R.id.crime);
-            definition = itemView.findViewById(R.id.definition);
         }
     }
 }

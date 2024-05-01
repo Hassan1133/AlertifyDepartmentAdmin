@@ -12,8 +12,9 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/close" />
 
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/crime_type_layout"
+        android:id="@+id/sectionNumberLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,13 +22,13 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:hint="@string/crime"
+        android:hint="@string/enter_section_number_here"
         android:textColorHint="@color/hint_color"
         app:boxStrokeColor="@color/hint_color"
         app:hintTextColor="@color/hint_color">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/crime_type"
+            android:id="@+id/sectionNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/hint_color"
@@ -37,21 +38,21 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/Definition_layout"
+        android:id="@+id/lawLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/crime_type_layout"
+        android:layout_below="@+id/sectionNumberLayout"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:hint="@string/definition"
+        android:hint="@string/enter_law_here"
         android:textColorHint="@color/hint_color"
         app:boxStrokeColor="@color/hint_color"
         app:hintTextColor="@color/hint_color">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/definition"
+            android:id="@+id/law"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/hint_color"
@@ -61,23 +62,23 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ProgressBar
-        android:id="@+id/crimes_dialog_progressbar"
+        android:id="@+id/law_dialog_progressbar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/Definition_layout"
+        android:layout_below="@+id/lawLayout"
         android:layout_centerHorizontal="true"
         android:indeterminateTint="@color/app_color"
         android:visibility="invisible" />
 
     <Button
-        android:id="@+id/add_crime_btn"
+        android:id="@+id/addLawDetailBtn"
         android:layout_width="match_parent"
         android:layout_height="50sp"
-        android:layout_below="@id/crimes_dialog_progressbar"
+        android:layout_below="@id/law_dialog_progressbar"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/app_color"
-        android:text="Add Crime"
+        android:text="@string/add_law_details"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:cornerRadius="10dp" />

@@ -38,7 +38,7 @@ public class CrimesActivity extends AppCompatActivity {
 
     private Dialog crimesDialog;
 
-    private TextInputEditText crimeType;
+    private TextInputEditText crimeType, crimeDefinition;
 
     private DatabaseReference crimesRef;
 
@@ -69,6 +69,7 @@ public class CrimesActivity extends AppCompatActivity {
 
         crimes = new ArrayList<CrimesModel>();
 
+        fetchData();
         binding.crimesSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -81,8 +82,6 @@ public class CrimesActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        fetchData();
     }
 
     private void search(String newText) {
@@ -103,6 +102,7 @@ public class CrimesActivity extends AppCompatActivity {
         crimesDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         crimeType = crimesDialog.findViewById(R.id.crime_type);
+        crimeDefinition = crimesDialog.findViewById(R.id.definition);
         crimesDialogProgressbar = crimesDialog.findViewById(R.id.crimes_dialog_progressbar);
 
         crimesDialog.findViewById(R.id.close_btn).setOnClickListener(new View.OnClickListener() {
@@ -121,6 +121,7 @@ public class CrimesActivity extends AppCompatActivity {
 
                     CrimesModel crimesModel = new CrimesModel();
                     crimesModel.setCrimeType(crimeType.getText().toString().trim());
+                    crimesModel.setDefinition(crimeDefinition.getText().toString().trim());
 
                     checkCrimeAlreadyExistOrNot(crimesModel);
 

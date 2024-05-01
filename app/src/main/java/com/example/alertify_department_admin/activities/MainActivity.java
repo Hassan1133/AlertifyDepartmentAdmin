@@ -1,11 +1,14 @@
 package com.example.alertify_department_admin.activities;
 
 import static com.example.alertify_department_admin.constants.Constants.ALERTIFY_DEP_ADMIN_REF;
+import static com.example.alertify_department_admin.constants.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,19 +16,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.alertify_department_admin.R;
+import com.example.alertify_department_admin.fragments.AnalyticsFragment;
 import com.example.alertify_department_admin.fragments.Complaints_Fragment;
 import com.example.alertify_department_admin.fragments.EmergencyRequestsFragment;
 import com.example.alertify_department_admin.fragments.Records_Fragment;
 import com.example.alertify_department_admin.main_utils.AppSharedPreferences;
+import com.example.alertify_department_admin.main_utils.LocationPermissionUtils;
 import com.example.alertify_department_admin.models.DepAdminModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +44,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AppSharedPreferences appSharedPreferences;
 
+    private LocationPermissionUtils locationPermissionUtils;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +74,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void init() {
 
         appSharedPreferences = new AppSharedPreferences(MainActivity.this);
+
+        locationPermissionUtils = new LocationPermissionUtils(this);
+        locationPermissionUtils.checkAndRequestPermissions();
+        locationPermissionUtils.getLocationPermission();
+
 
         ImageView toolBarBtn = findViewById(R.id.tool_bar_menu);
         toolBarBtn.setOnClickListener(this);
@@ -83,18 +98,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkDepAdminBlockOrNot();
         keepSharedPreferencesUpToDate();
         loadFragmentOnNotificationOrOnCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkNotificationPermission();
+        }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void checkNotificationPermission() {
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            // Permission already granted, proceed with your action
+        } else {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                // Show rationale to the user, then request permission using launcher
+                showPermissionRationale(Manifest.permission.POST_NOTIFICATIONS);
+            } else {
+                // Request permission directly using launcher
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    launcher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                }
+            }
+        }
+    }
+
+    private void showPermissionRationale(String permission) {
+        // Explain why the app needs permission
+        new MaterialAlertDialogBuilder(this).setMessage("This app needs notification permission to...") // Provide reason
+                .setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Launch permission request
+                        launcher.launch(permission);
+                    }
+                }).setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Dismiss dialog if user denies permission
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
+    ActivityResultLauncher<String> launcher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
+        @Override
+        public void onActivityResult(Boolean isGranted) {
+            if (!isGranted) {
+                // Handle permission denial
+                // Consider showing a message or taking appropriate action
+            }
+        }
+    });
+
 
     private void loadFragmentOnNotificationOrOnCreate() {
         if (getIntent().hasExtra("notificationFragment")) {
+            Toast.makeText(this, "out", Toast.LENGTH_SHORT).show();
             String fragmentName = getIntent().getStringExtra("notificationFragment");
             assert fragmentName != null;
             if (fragmentName.equals("EmergencyRequestsFragment")) {
-                loadFragment(new EmergencyRequestsFragment());
                 bottom_navigation.setSelectedItemId(R.id.emergency);
             }
         } else {
-            loadFragment(new Complaints_Fragment());
             bottom_navigation.setSelectedItemId(R.id.complaints);
         }
     }
@@ -154,6 +217,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
                     case R.id.emergency:
                         loadFragment(new EmergencyRequestsFragment());
+                        return true;
+                    case R.id.analytics:
+                        loadFragment(new AnalyticsFragment());
                         return true;
                 }
                 return false;
@@ -253,4 +319,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ENABLE_GPS: {
+                if (!locationPermissionUtils.locationPermission) {
+                    locationPermissionUtils.getLocationPermission();
+                }
+            }
+        }
+    }
 }

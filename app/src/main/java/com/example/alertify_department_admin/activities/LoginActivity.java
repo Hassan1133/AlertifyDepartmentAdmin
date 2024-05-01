@@ -119,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                             depAdmin.setDepAdminEmail(depAdminModel.getDepAdminEmail());
                             depAdmin.setDepAdminName(depAdminModel.getDepAdminName());
                             depAdmin.setDepAdminPoliceStation(depAdminModel.getDepAdminPoliceStation());
+                            depAdmin.setHighAuthorityId(depAdminModel.getHighAuthorityId());
                             signIn(binding.email.getText().toString().trim(), binding.password.getText().toString().trim());
                             return;
                         } else if (count == snapshot.getChildrenCount()) {
@@ -234,8 +235,8 @@ public class LoginActivity extends AppCompatActivity {
             appSharedPreferences.put("depAdminId", depAdmin.getDepAdminId());
             appSharedPreferences.put("depAdminName", depAdmin.getDepAdminName());
             appSharedPreferences.put("depAdminEmail", depAdmin.getDepAdminEmail());
+            appSharedPreferences.put("depAdminHighAuthorityId", depAdmin.getHighAuthorityId());
             appSharedPreferences.put("depAdminPoliceStation", depAdmin.getDepAdminPoliceStation());
-
             LoadingDialog.hideLoadingDialog(loadingDialog);
             Toast.makeText(LoginActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
             goToMainActivity();

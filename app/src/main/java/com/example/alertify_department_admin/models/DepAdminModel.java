@@ -9,6 +9,16 @@ public class DepAdminModel {
     private String depAdminStatus;
     private String depAdminFCMToken;
 
+    private String highAuthorityId;
+
+    public String getHighAuthorityId() {
+        return highAuthorityId;
+    }
+
+    public void setHighAuthorityId(String highAuthorityId) {
+        this.highAuthorityId = highAuthorityId;
+    }
+
     public String getDepAdminId() {
         return depAdminId;
     }

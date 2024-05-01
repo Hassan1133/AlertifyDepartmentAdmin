@@ -52,6 +52,9 @@ dependencies {
 //    circular image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // google location services
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
 //    glide
     implementation 'com.github.bumptech.glide:glide:4.15.1'
 
@@ -63,4 +66,9 @@ dependencies {
 
     // Kotlin bom for removing error of duplicate class
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    //okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 }
